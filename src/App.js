@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { createGlobalStyle } from 'styled-components';
+import { Routes, Route, Link } from "react-router-dom";
+
+import { Posts } from './containers/Posts';
+
+const GlobalCss = createGlobalStyle`
+  body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+  }
+
+  header {
+    padding: 8px;
+    background: #00e88f;
+    text-align: center;
+    font-weight: bolder;
+  }
+`
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <GlobalCss />
+      <div className="App">
+        <header className="App-header">
+          <p>To do list</p>
+        </header>
+        <Routes>
+          <Route path='/' element={<Posts />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 
