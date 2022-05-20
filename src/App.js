@@ -1,38 +1,36 @@
-import { createGlobalStyle } from 'styled-components';
-import { Routes, Route, Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import { Routes, Route } from "react-router-dom";
+import axios from 'axios'
 
-import { Posts } from './containers/Posts';
-
-const GlobalCss = createGlobalStyle`
-  body {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-  }
-
-  header {
-    padding: 8px;
-    background: #00e88f;
-    text-align: center;
-    font-weight: bolder;
-  }
-`
+import { UserPosts } from './containers/UserPosts';
+import { Users } from './containers/Users'
+import { TodoContext } from './contexts/TodoContext';
+import { GlobalCss } from './assets/globalCss'
 
 function App() {
+  const [data, setData] = useState([])
+  const [choosenOne, setChoosenOne] = useState(0)
 
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+    .then(res => setData(res.data))
+  }, [])
+  
   return (
-    <>
-      <GlobalCss />
+    <TodoContext.Provider value={{ data, setData, choosenOne, setChoosenOne }} >
+      <GlobalCss /> 
       <div className="App">
         <header className="App-header">
           <p>To do list</p>
         </header>
         <Routes>
-          <Route path='/' element={<Posts />} />
+          <Route path='/' element={<Users />} />
+          <Route path="users">
+            <Route path=":id" element={<UserPosts />} />
+          </Route>
         </Routes>
       </div>
-    </>
+    </TodoContext.Provider>
   );
 }
 

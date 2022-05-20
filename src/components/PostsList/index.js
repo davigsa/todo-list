@@ -1,41 +1,40 @@
 import React from 'react'
-import styled from 'styled-components'
+import axios from 'axios'
 
-const ListWrapper = styled.ul`
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-`
-
-const ListItem = styled.li`
-    width: 250px;
-    margin: 8px;
-
-    fieldset {
-        padding: 8px;
-    }
-`
+import * as S from './styles'
 
 function PostsList({ posts }) {
+    const changeHandler = (e, item) => {
+        e.preventDefault()
+        const inputItem = document.querySelector(`input#item-${item.id}`)
+
+        axios.patch(`https://jsonplaceholder.typicode.com/todos/${item.id}`, 
+        {
+            userId: item.userId,
+            title: item.title,
+            completed: !item.completed
+        })
+        .then(() => inputItem.checked = !inputItem.checked)
+    }
+
     return (
-        <ListWrapper>
+        <S.ListWrapper>
             {posts
                 ? posts.map((item, i) => {
                     return (
-                    <ListItem key={i}>
+                    <S.ListItem key={i} onClick={(e) => changeHandler(e, item)}>
                         <fieldset>
-                            <legend>Usuário {item.userId}:</legend>
                             <div>
-                                <input type="checkbox" id={item.id} name={item.id} checked={item.completed} />
-                                <label for={item.id}>{item.title}</label>
+                                <input type="checkbox" id={`item-${item.id}`} name={item.id} checked={item.completed} />
+                                <label htmlFor={item.id}>{item.title}</label>
                             </div>
                         </fieldset>
-                    </ListItem>
+                    </S.ListItem>
                     )
                 })
                 : <li>Não há nenhum item.</li>
             }
-        </ListWrapper>
+        </S.ListWrapper>
     )
 }
 
